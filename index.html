@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow · Kanban & Analytics</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">
+                <h1><i class="fas fa-tasks"></i> TaskFlow</h1>
+            </div>
+            <div class="toolbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search tasks..." />
+                </div>
+                <div class="filter-sort">
+                    <select id="filterStatus">
+                        <option value="all">All</option>
+                        <option value="todo">To do</option>
+                        <option value="doing">Doing</option>
+                        <option value="done">Done</option>
+                    </select>
+                    <select id="sortBy">
+                        <option value="date">Sort by date</option>
+                        <option value="title">Sort by title</option>
+                    </select>
+                    <button id="clearFiltersBtn"><i class="fas fa-undo-alt"></i> Reset</button>
+                </div>
+                <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-list-ul"></i></div>
+                <div class="stat-info">
+                    <h4>Total</h4>
+                    <span id="totalTasks">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <h4>To Do</h4>
+                    <span id="todoCount">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                <div class="stat-info">
+                    <h4>Doing</h4>
+                    <span id="doingCount">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-info">
+                    <h4>Done</h4>
+                    <span id="doneCount">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD: calendar + board -->
+        <div class="dashboard-panels">
+            <!-- Calendar -->
+            <div class="calendar-panel">
+                <h3>
+                    <span><i class="far fa-calendar-alt"></i> June 2026</span>
+                    <span style="font-weight:400; font-size:0.8rem;">
+                        <i class="fas fa-circle" style="color:#facc15; font-size:0.6rem;"></i> reminders
+                    </span>
+                </h3>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+
+            <!-- Kanban board -->
+            <div class="task-board">
+                <div class="board-header">
+                    <h3><i class="fas fa-columns"></i> Kanban Board</h3>
+                    <button class="add-task-btn" id="addTaskBtn">
+                        <i class="fas fa-plus"></i> Add task
+                    </button>
+                </div>
+                <div class="kanban" id="kanbanBoard">
+                    <div class="kanban-col" data-status="todo">
+                        <h4>📋 To do <span id="todoBadge">0</span></h4>
+                        <div class="task-list" id="todoList"></div>
+                    </div>
+                    <div class="kanban-col" data-status="doing">
+                        <h4>🔄 Doing <span id="doingBadge">0</span></h4>
+                        <div class="task-list" id="doingList"></div>
+                    </div>
+                    <div class="kanban-col" data-status="done">
+                        <h4>✅ Done <span id="doneBadge">0</span></h4>
+                        <div class="task-list" id="doneList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="analytics-section">
+            <div class="progress-bar-wrap">
+                <div class="label">
+                    <span>Completion progress</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="analytics-stats">
+                <div><strong id="completedTasks">0</strong> completed</div>
+                <div><strong id="pendingTasks">0</strong> pending</div>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div class="modal-overlay" id="taskModal">
+            <div class="modal-box">
+                <h2 id="modalTitle">New Task</h2>
+                <input type="text" id="taskTitleInput" placeholder="Task title..." />
+                <input type="date" id="taskDueDate" />
+                <select id="taskStatusSelect">
+                    <option value="todo">To do</option>
+                    <option value="doing">Doing</option>
+                    <option value="done">Done</option>
+                </select>
+                <div class="modal-actions">
+                    <button class="btn-secondary" id="modalCancel">Cancel</button>
+                    <button class="btn-primary" id="modalSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
