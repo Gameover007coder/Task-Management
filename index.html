@@ -1,151 +1,194 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TaskFlow · Kanban & Analytics</title>
-    <!-- Font Awesome 6 (free) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <!-- External CSS -->
+    <title>TaskFlow</title>
+    <meta name="description" content="TaskFlow is a fast, private task board with a deadline calendar. Your tasks stay in your browser." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232a5bd7'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+    <!-- Set the theme before first paint so there is no light/dark flash -->
+    <script>
+        (function () {
+            var theme = 'light';
+            try {
+                var saved = localStorage.getItem('taskflow.theme');
+                if (saved === 'light' || saved === 'dark') theme = saved;
+                else if (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+            } catch (e) {}
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="app-container">
+    <a class="skip-link" href="#board">Skip to the board</a>
 
-        <!-- HEADER -->
-        <header class="header">
-            <div class="logo">
-                <h1><i class="fas fa-tasks"></i> TaskFlow</h1>
-            </div>
-            <div class="toolbar">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search tasks..." />
-                </div>
-                <div class="filter-sort">
-                    <select id="filterStatus">
-                        <option value="all">All</option>
-                        <option value="todo">To do</option>
-                        <option value="doing">Doing</option>
-                        <option value="done">Done</option>
-                    </select>
-                    <select id="sortBy">
-                        <option value="date">Sort by date</option>
-                        <option value="title">Sort by title</option>
-                    </select>
-                    <button id="clearFiltersBtn"><i class="fas fa-undo-alt"></i> Reset</button>
-                </div>
-                <button class="dark-toggle" id="darkToggle"><i class="fas fa-moon"></i></button>
+    <div class="app">
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <a class="brand" href="./" aria-label="TaskFlow">
+                <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+                    <rect width="32" height="32" rx="8" fill="var(--accent)"></rect>
+                    <path d="M9 16.5l4.5 4.5L23 11.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span>TaskFlow</span>
+            </a>
+
+            <form class="quick-add" id="quickAdd" autocomplete="off">
+                <label class="sr-only" for="quickInput">Quick add a task</label>
+                <input id="quickInput" type="text" maxlength="200" placeholder="Add a task… try “Send invoice @tomorrow !high”" />
+                <button class="btn btn-primary" type="submit">Add</button>
+            </form>
+
+            <div class="top-actions">
+                <button class="btn" id="newTaskBtn" type="button"><span data-icon="plus"></span> New task</button>
+                <button class="icon-btn" id="exportBtn" type="button" aria-label="Export tasks as JSON" title="Export tasks as JSON"><span data-icon="download"></span></button>
+                <button class="icon-btn" id="importBtn" type="button" aria-label="Import tasks from JSON" title="Import tasks from JSON"><span data-icon="upload"></span></button>
+                <input id="importFile" type="file" accept="application/json,.json" hidden />
+                <button class="icon-btn" id="themeBtn" type="button"></button>
             </div>
         </header>
 
-        <!-- STATS -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-list-ul"></i></div>
-                <div class="stat-info">
-                    <h4>Total</h4>
-                    <span id="totalTasks">0</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-clock"></i></div>
-                <div class="stat-info">
-                    <h4>To Do</h4>
-                    <span id="todoCount">0</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-spinner"></i></div>
-                <div class="stat-info">
-                    <h4>Doing</h4>
-                    <span id="doingCount">0</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                <div class="stat-info">
-                    <h4>Done</h4>
-                    <span id="doneCount">0</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- DASHBOARD: calendar + board -->
-        <div class="dashboard-panels">
-            <!-- Calendar -->
-            <div class="calendar-panel">
-                <h3>
-                    <span><i class="far fa-calendar-alt"></i> June 2026</span>
-                    <span style="font-weight:400; font-size:0.8rem;">
-                        <i class="fas fa-circle" style="color:#facc15; font-size:0.6rem;"></i> reminders
-                    </span>
-                </h3>
-                <div class="calendar-grid" id="calendarGrid"></div>
-            </div>
-
-            <!-- Kanban board -->
-            <div class="task-board">
-                <div class="board-header">
-                    <h3><i class="fas fa-columns"></i> Kanban Board</h3>
-                    <button class="add-task-btn" id="addTaskBtn">
-                        <i class="fas fa-plus"></i> Add task
-                    </button>
-                </div>
-                <div class="kanban" id="kanbanBoard">
-                    <div class="kanban-col" data-status="todo">
-                        <h4>📋 To do <span id="todoBadge">0</span></h4>
-                        <div class="task-list" id="todoList"></div>
+        <div class="layout">
+            <!-- BOARD -->
+            <main>
+                <div class="controls">
+                    <div class="search">
+                        <span data-icon="search"></span>
+                        <input id="searchInput" type="search" placeholder="Search tasks" aria-label="Search tasks (press / to focus)" />
                     </div>
-                    <div class="kanban-col" data-status="doing">
-                        <h4>🔄 Doing <span id="doingBadge">0</span></h4>
-                        <div class="task-list" id="doingList"></div>
-                    </div>
-                    <div class="kanban-col" data-status="done">
-                        <h4>✅ Done <span id="doneBadge">0</span></h4>
-                        <div class="task-list" id="doneList"></div>
-                    </div>
+                    <select id="filterStatus" aria-label="Show status">
+                        <option value="all">All statuses</option>
+                        <option value="todo">To do</option>
+                        <option value="doing">In progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                    <select id="filterPriority" aria-label="Show priority">
+                        <option value="all">All priorities</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <select id="sortBy" aria-label="Sort tasks">
+                        <option value="manual">Manual order</option>
+                        <option value="due">Due date</option>
+                        <option value="priority">Priority</option>
+                        <option value="title">Title A–Z</option>
+                        <option value="newest">Newest first</option>
+                    </select>
+                    <button class="chip-btn" id="dateChip" type="button" hidden></button>
+                    <button class="btn btn-ghost" id="resetBtn" type="button">Reset filters</button>
                 </div>
-            </div>
+
+                <div class="board" id="board" aria-label="Task board"></div>
+            </main>
+
+            <!-- SIDE PANELS -->
+            <aside class="side">
+                <section class="panel" aria-labelledby="summaryTitle">
+                    <h2 id="summaryTitle">Progress</h2>
+                    <p class="summary-line" id="summaryLine">No tasks yet</p>
+                    <div class="progress" id="progressTrack" role="progressbar" aria-labelledby="summaryTitle" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <dl class="mini-stats">
+                        <div><dt>Overdue</dt><dd id="statOverdue" class="is-danger">0</dd></div>
+                        <div><dt>Due today</dt><dd id="statToday">0</dd></div>
+                        <div><dt>Done this week</dt><dd id="statWeek">0</dd></div>
+                    </dl>
+                </section>
+
+                <section class="panel" aria-labelledby="calTitle">
+                    <div class="panel-head">
+                        <h2 id="calTitle">Calendar</h2>
+                        <div class="cal-nav">
+                            <button class="icon-btn" id="calPrev" type="button" aria-label="Previous month"><span data-icon="chevron-left"></span></button>
+                            <button class="btn btn-sm" id="calToday" type="button">Today</button>
+                            <button class="icon-btn" id="calNext" type="button" aria-label="Next month"><span data-icon="chevron-right"></span></button>
+                        </div>
+                    </div>
+                    <p class="cal-month" id="calMonth" aria-live="polite"></p>
+                    <div class="cal-grid" id="calGrid"></div>
+                    <p class="hint">Select a day to see what is due. Select it again to clear.</p>
+                </section>
+
+                <section class="panel" aria-labelledby="upTitle">
+                    <h2 id="upTitle">Coming up</h2>
+                    <ul class="upcoming" id="upcomingList"></ul>
+                </section>
+            </aside>
         </div>
 
-        <!-- Analytics -->
-        <div class="analytics-section">
-            <div class="progress-bar-wrap">
-                <div class="label">
-                    <span>Completion progress</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressFill" style="width:0%"></div>
-                </div>
-            </div>
-            <div class="analytics-stats">
-                <div><strong id="completedTasks">0</strong> completed</div>
-                <div><strong id="pendingTasks">0</strong> pending</div>
-            </div>
-        </div>
-
-        <!-- MODAL -->
-        <div class="modal-overlay" id="taskModal">
-            <div class="modal-box">
-                <h2 id="modalTitle">New Task</h2>
-                <input type="text" id="taskTitleInput" placeholder="Task title..." />
-                <input type="date" id="taskDueDate" />
-                <select id="taskStatusSelect">
-                    <option value="todo">To do</option>
-                    <option value="doing">Doing</option>
-                    <option value="done">Done</option>
-                </select>
-                <div class="modal-actions">
-                    <button class="btn-secondary" id="modalCancel">Cancel</button>
-                    <button class="btn-primary" id="modalSave">Save</button>
-                </div>
-            </div>
-        </div>
+        <footer class="footer">
+            <span class="shortcut"><kbd>N</kbd> new task</span>
+            <span class="shortcut"><kbd>/</kbd> search</span>
+            <span class="shortcut"><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Z</kbd> undo</span>
+            <span class="shortcut">Your tasks are saved in this browser only. Use export to back them up.</span>
+        </footer>
     </div>
 
-    <!-- External JavaScript -->
+    <!-- TASK DIALOG -->
+    <dialog id="taskDialog" aria-labelledby="dialogTitle">
+        <form id="taskForm" novalidate>
+            <h2 id="dialogTitle">New task</h2>
+
+            <div class="field">
+                <label for="fTitle">Title</label>
+                <input id="fTitle" type="text" maxlength="200" autocomplete="off" required />
+            </div>
+
+            <div class="field">
+                <label for="fNotes">Notes <span class="optional">(optional)</span></label>
+                <textarea id="fNotes" rows="3" maxlength="2000"></textarea>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="fDue">Due date</label>
+                    <input id="fDue" type="date" />
+                </div>
+                <div class="field">
+                    <label for="fPriority">Priority</label>
+                    <select id="fPriority">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="quick-dates" role="group" aria-label="Set due date quickly">
+                <button class="btn btn-sm" type="button" data-quick="today">Today</button>
+                <button class="btn btn-sm" type="button" data-quick="tomorrow">Tomorrow</button>
+                <button class="btn btn-sm" type="button" data-quick="week">In a week</button>
+                <button class="btn btn-sm btn-ghost" type="button" data-quick="none">No date</button>
+            </div>
+
+            <div class="field">
+                <label for="fStatus">Status</label>
+                <select id="fStatus">
+                    <option value="todo">To do</option>
+                    <option value="doing">In progress</option>
+                    <option value="done">Done</option>
+                </select>
+            </div>
+
+            <div class="dialog-actions">
+                <button class="btn btn-danger" id="fDelete" type="button" hidden>Delete task</button>
+                <span class="spacer"></span>
+                <button class="btn" id="fCancel" type="button">Cancel</button>
+                <button class="btn btn-primary" id="fSave" type="submit">Add task</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
     <script src="script.js"></script>
 </body>
 </html>
