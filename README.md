@@ -1,366 +1,96 @@
-# TaskFlow – Personal Task Management Web Application
+# TaskFlow
 
-<div align="center">
+A fast, private Kanban task board with a deadline calendar. No account, no build step, no backend. Your tasks are saved in your browser and the whole app is three static files.
 
-# 📋 TaskFlow
+## Features
 
-### *A Modern Drag-and-Drop Task Management Web Application*
+**Tasks**
+- Add, edit, delete and complete tasks, each with a title, notes, due date, priority and status
+- Quick add bar with shortcuts: `Send invoice @tomorrow !high`
+  - `@today`, `@tomorrow` or `@2026-12-31` sets the due date
+  - `!high`, `!medium` or `!low` sets the priority
+- Due-date badges that read naturally: "Due today", "Due tomorrow", "3 days overdue", with overdue cards marked on the left edge
 
-Organize your personal tasks and projects with an intuitive Kanban board, deadline tracking, analytics dashboard, and responsive design.
+**Board**
+- To do, In progress and Done columns
+- Drag and drop between columns, with a drop indicator, and reorder within a column
+- Arrow buttons on every card, so moving tasks works on touch screens and with a keyboard
+- Click a task to edit it, or use the checkbox to complete it
 
-</div>
+**Finding things**
+- Search titles and notes
+- Filter by status and priority, sort by manual order, due date, priority, title or newest
+- Select a day in the calendar to show only the tasks due that day
 
----
+**Calendar and progress**
+- A real calendar for any month, starting on Monday, with today highlighted and a dot for each task due that day (red when overdue)
+- "Coming up" list of your next deadlines
+- Progress bar with overdue, due-today and done-this-week counts
 
-## 🚀 Overview
+**Safety net**
+- Autosave to `localStorage`
+- Undo for deletes, moves, edits, imports and more: use the Undo button on the toast, or press `Ctrl/⌘ + Z`
+- Export and import tasks as JSON for backups or moving between devices
+- Tasks stay in sync across open tabs
 
-**TaskFlow** is a lightweight and modern web application designed to help users manage their daily tasks and projects efficiently. It provides a clean Kanban-style interface where tasks can be created, edited, deleted, and moved between different stages using drag-and-drop functionality.
+**Comfort**
+- Light and dark themes, following your system by default and remembered once you choose
+- Keyboard shortcuts: `N` new task, `/` search, `Esc` clears search or closes the dialog
+- Accessible dialog, labelled controls, visible focus and reduced-motion support
+- Responsive layout from phone to widescreen
 
-The application also includes productivity analytics, task searching, filtering, sorting, a calendar view for reminders, and dark mode support.
-
----
-
-## ✨ Features
-
-### 📌 Task Management
-
-* Create new tasks
-* Edit existing tasks
-* Delete tasks
-* Mark tasks as completed
-* Assign due dates
-* Organize tasks by status
-
-### 📊 Kanban Board
-
-* Three workflow stages:
-
-  * 📋 To Do
-  * 🔄 Doing
-  * ✅ Done
-* Drag and drop tasks between columns
-* Automatic status updates
-
-### 🔍 Search & Filter
-
-* Search tasks instantly
-* Filter by status
-* Sort tasks by:
-
-  * Due date
-  * Title
-* Reset filters with one click
-
-### 📅 Calendar View
-
-* Monthly calendar interface
-* Visual reminder indicators
-* Highlighted important dates
-* Deadline awareness
-
-### 📈 Analytics Dashboard
-
-* Total tasks
-* To Do count
-* Doing count
-* Completed count
-* Completion percentage
-* Pending tasks
-* Progress bar visualization
-
-### 🌙 Dark Mode
-
-* One-click theme switching
-* Modern dark UI
-* Smooth transitions
-
-### 📱 Responsive Design
-
-* Desktop optimized
-* Tablet friendly
-* Mobile compatible
-
-### 📝 Modal-Based Task Creation
-
-* Easy popup interface
-* Add title
-* Set due date
-* Choose task status
-
----
-
-## 🛠️ Technologies Used
-
-| Technology           | Purpose                     |
-| -------------------- | --------------------------- |
-| HTML5                | Structure                   |
-| CSS3                 | Styling & Responsive Design |
-| JavaScript (Vanilla) | Application Logic           |
-| Font Awesome         | Icons                       |
-| Drag & Drop API      | Task movement               |
-
----
-
-## 📂 Project Structure
-
-```
-TaskFlow/
-│
-├── index.html        # Main application interface
-├── style.css         # Styling and responsive design
-├── script.js         # Application logic
-└── README.md         # Project documentation
-```
-
----
-
-## 🎯 Application Workflow
-
-```
-          +----------------+
-          |  Create Task   |
-          +-------+--------+
-                  |
-                  ▼
-         +-------------------+
-         |     To Do         |
-         +-------------------+
-                  |
-          Drag & Drop
-                  ▼
-         +-------------------+
-         |     Doing         |
-         +-------------------+
-                  |
-          Drag & Drop
-                  ▼
-         +-------------------+
-         |      Done         |
-         +-------------------+
-                  |
-                  ▼
-        Analytics Updated Automatically
-```
-
----
-
-## 📊 Dashboard Components
-
-### Statistics Cards
-
-* 📋 Total Tasks
-* ⏰ To Do
-* 🔄 Doing
-* ✅ Done
-
-### Analytics
-
-* Completion Progress
-* Completed Tasks
-* Pending Tasks
-* Progress Percentage
-
----
-
-## 🔧 Installation
-
-### 1. Clone the repository
+## Run it locally
 
 ```bash
 git clone https://github.com/yourusername/taskflow.git
-```
-
-### 2. Navigate into the project
-
-```bash
 cd taskflow
 ```
 
-### 3. Open the application
-
-Simply open:
-
-```text
-index.html
-```
-
-in your preferred web browser.
-
-No additional setup or dependencies are required.
-
----
-
-## 💻 Usage
-
-### Add a Task
-
-1. Click **"Add Task"**
-2. Enter task title
-3. Select due date
-4. Choose status
-5. Save
-
-### Edit a Task
-
-* Click the ✏️ Edit icon
-* Update information
-* Save changes
-
-### Delete a Task
-
-* Click the 🗑️ Delete icon
-* Confirm deletion
-
-### Complete a Task
-
-* Click the ✅ Complete button
-* Task automatically moves to **Done**
-
-### Drag & Drop
-
-Simply drag a task card and drop it into another column to update its status.
-
----
-
-## 📈 Productivity Tracking
-
-TaskFlow automatically calculates:
-
-* Total tasks
-* Completed tasks
-* Pending tasks
-* Completion percentage
-
-Example:
-
-```
-Total Tasks      : 10
-Completed Tasks : 7
-Pending Tasks   : 3
-Progress        : 70%
-```
-
----
-
-## 🌙 Dark Mode
-
-Click the moon icon in the header to switch between:
-
-* ☀️ Light Theme
-* 🌙 Dark Theme
-
-The interface updates instantly without reloading.
-
----
-
-## 🔍 Search & Filtering
-
-Search tasks by title.
-
-Filter options include:
-
-* All
-* To Do
-* Doing
-* Done
-
-Sorting options:
-
-* By Date
-* By Title
-
----
-
-## 📅 Calendar
-
-The built-in calendar provides:
-
-* Monthly overview
-* Today's highlight
-* Reminder markers
-* Quick deadline visualization
-
----
-
-## 🎨 UI Highlights
-
-* Modern glass-like cards
-* Rounded components
-* Clean typography
-* Responsive layout
-* Smooth animations
-* Professional dashboard appearance
-
----
-
-## 🚀 Future Enhancements
-
-* User authentication
-* Multiple projects
-* Local Storage / Database persistence
-* Cloud synchronization
-* Email reminders
-* Push notifications
-* Recurring tasks
-* Labels and tags
-* Priority levels
-* File attachments
-* Subtasks
-* Team collaboration
-* Real-time synchronization
-* AI-powered task suggestions
-* Calendar integrations
-* Export to PDF/CSV
-
----
-
-## 🐞 Known Limitations
-
-* Tasks are stored only in memory and are lost on page refresh.
-* Calendar reminders are static and not generated dynamically from task data.
-* No backend or database integration.
-* Single-user application.
-* No notification service.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create a feature branch
+Open `index.html` in a browser. Because everything is static, any simple server also works:
 
 ```bash
-git checkout -b feature-name
+python3 -m http.server 8000
 ```
 
-3. Commit your changes
+## Deploy to GitHub Pages
 
-```bash
-git commit -m "Add new feature"
+The workflow in `.github/workflows/static.yml` publishes the repository to GitHub Pages on every push to `main`.
+
+1. In the repository, go to **Settings → Pages** and set **Source** to **GitHub Actions**.
+2. Push to `main`.
+3. The site URL appears in the workflow run and under **Settings → Pages**.
+
+## Project structure
+
+```
+TaskFlow/
+├── .github/workflows/static.yml   # GitHub Pages deployment
+├── index.html                     # Page structure
+├── style.css                      # Themes, layout, components
+├── script.js                      # App logic
+└── README.md
 ```
 
-4. Push to your branch
+## Data and privacy
 
-```bash
-git push origin feature-name
-```
+- Everything lives in your browser's `localStorage` under the key `taskflow.v2`. Nothing is sent anywhere.
+- Clearing site data or switching browsers or devices means starting fresh, so use **Export** (download icon) to back up and **Import** (upload icon) to restore. Importing replaces your current list, and you can undo it.
+- If stored data is ever unreadable, a copy is kept under `taskflow.v2.backup` instead of being overwritten.
+- The first visit loads a few sample tasks so the board isn't empty. Delete them whenever you like.
 
-5. Open a Pull Request
+## Known limitations
 
----
+- No sync between devices (use export and import)
+- Drag and drop uses the browser's native API, which most mobile browsers don't support; the arrow buttons cover that
+- Single user, no reminders or notifications
 
-## 📄 License
+## Ideas for later
 
-This project is licensed under the **MIT License**.
+- Labels, subtasks and recurring tasks
+- Multiple boards
+- Optional cloud sync
+- Reminders via the Notifications API
 
-You are free to use, modify, and distribute it for personal or commercial purposes.
+## License
 
----
-
-## 👨‍💻 Author
-
-**TaskFlow – Personal Task Management Web Application**
-
-Built with ❤️ using **HTML, CSS, and JavaScript** to provide a simple, intuitive, and visually appealing task management experience.
+MIT. Use it, change it, share it.
